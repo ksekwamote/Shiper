@@ -1,21 +1,41 @@
 import { Feather } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { View, Text, TextInput  , StyleSheet} from 'react-native'
+import { View, Text, TextInput  , StyleSheet , TouchableOpacity} from 'react-native'
+import { useDispatch } from 'react-redux';
+import { changeTrackingID } from '../../redux/actions/actions';
+
 
 
 export default function SearchTab() {
+
+    const [id , setID] = React.useState('')
+    const dispatch  = useDispatch()
+    const navigation = useNavigation()
+
+    function onSearch(){
+        if (id){
+            dispatch(changeTrackingID(id))
+            navigation.navigate('addTracker')
+        return
+        }
+        alert('Tracking ID Field is empty')
+    }
+
+
     return (
         <View style={style.container}>
             <View style={{display:'flex', flexDirection:'row' , alignItems:'center'}}>
                     <Feather name="search" size={20} color="black" />
-                    <TextInput style={{color: '#000' , marginLeft:5 , width:250}}  defaultValue='Tracking ID' />
+                    <TextInput onChangeText={setID}  style={{color: '#000' , marginLeft:5 , width:250}}  placeholder='Tracking ID' />
             </View>
         
+        <TouchableOpacity onPress={() =>onSearch()} >
+               <AntDesign  name="scan1" size={20} color="black" />
+        </TouchableOpacity>
 
-          <View>
-                <AntDesign  name="scan1" size={20} color="black" />
-          </View>
+          
           
         </View>
     )

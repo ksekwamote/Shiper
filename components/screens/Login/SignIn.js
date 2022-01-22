@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
@@ -26,7 +26,7 @@ const Header = () =>{
            
         </View>
         <View style={{marginLeft:20, display: 'flex' , justifyContent: 'center' , alignItems: 'center' }}>
-            <Text style={{fontWeight: 'bold' , fontSize: 20 ,color: '#fff'}} >Log In</Text>
+            <Text style={{fontWeight: 'bold' , fontSize: 25 ,color: '#fff'}} >Log In</Text>
         </View>
     </View>
     )
@@ -66,7 +66,7 @@ const LogFields = () =>{
 
          return firebase.auth().signInWithEmailAndPassword(user,pass)
         })
-        .then(() => navigation.navigate("tracker"))
+        .then(() => navigation.navigate("success"))
         .catch(err => alert("Password or Email is incorrect"+err)) 
     }
 
@@ -74,21 +74,22 @@ const LogFields = () =>{
         <View style={{marginTop:40}}>
             <View>
                 <Text style={styles.inputLabel}>Email</Text>
-                <TextInput onChangeText={setEmail} style={styles.textInput} placeholderTextColor={colors.lightgrey} placeholder='  Enter your email address'></TextInput>
+                <TextInput onChangeText={setEmail} style={styles.textInput} placeholderTextColor={colors.lightgrey} placeholder='Enter your email address'></TextInput>
             </View>
             <View>
                 <Text style={styles.inputLabel}>Password</Text>
-                <TextInput onChangeText={setPassword} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='  Enter your password'></TextInput>
+                <TextInput onChangeText={setPassword} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
             </View>
-            <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' , marginTop:225}}>
+            <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' , marginTop:50}}>
                 <View>
                     <TouchableOpacity onPress={()=>login(email ,password)} style={{ display: 'flex' , justifyContent:'center' , alignItems: 'center' , backgroundColor:colors.white , borderRadius:15 , width: 250 , padding:15}}>
                         <Text style={{color:'#000' , fontWeight:'bold'}}>Login</Text>
                     </TouchableOpacity>
                 </View>
-                <View>
+
+                <Pressable style={{marginTop:10}} onPress={()=> navigation.navigate('signup') } >
                     <Text style={styles.inputLabel}>Dont have an account? <Text style={{fontWeight: 'bold'}}>Sign Up</Text></Text>
-                </View>
+                </Pressable>
             </View>
            
 

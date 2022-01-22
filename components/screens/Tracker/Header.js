@@ -5,6 +5,9 @@ import SearchTab from './SearchTab';
 
 
 export default function Header() {
+
+   
+
     return (
         <View style={styles.container}>
             <View style={styles.apart} >
@@ -19,7 +22,7 @@ export default function Header() {
             <View style={styles.justify} >
 
                 <View style={{display:'flex' , paddingVertical:10 ,justifyContent: 'space-between' , alignItems: 'center' , flexDirection: 'row'}}>
-                        <Text style={styles.heading}>Welcome to Shiper</Text>
+                        <Text style={styles.heading}>Hi Kutlo, welcome to Shiper</Text>
                 </View>
 
                 <SearchTab />
@@ -55,6 +58,7 @@ const styles  = StyleSheet.create({
     },
     container : {
         backgroundColor: 'black',
-        padding:15
+        padding:15, 
+        marginTop:25
     }
 })

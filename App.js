@@ -4,17 +4,28 @@ import { StyleSheet, Text, View , SafeAreaView } from 'react-native';
 import Tracker from './components/screens/Tracker/Tracker';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './components/navigation/StackNavigator';
+import { createStore , applyMiddleware } from "redux"
+import reducers from "./components/redux/reducers/index"
+import { Provider } from 'react-redux'
+import thunk from 'redux-thunk'
 
 
+
+const store  = createStore(reducers ,applyMiddleware(thunk))
 
 export default function App() {
   return (
 
-          <NavigationContainer>
+    <Provider store={store}>
 
-             <StackNavigator />
+        <NavigationContainer>
 
-          </NavigationContainer>
+            <StackNavigator />
+
+        </NavigationContainer>
+
+    </Provider>
+        
          
     
        

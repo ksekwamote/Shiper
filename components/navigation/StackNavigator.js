@@ -1,36 +1,58 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import {createStackNavigator } from '@react-navigation/stack'
-import Tracker from '../screens/Tracker/Tracker';
-import History from '../screens/Tracker/History';
-import Home from '../screens/Home/Home';
-import SignIn from '../screens/Login/SignIn';
-
+import { Home, SignIn,SignUp,Success,History ,AddTracker ,TrackingDetails ,Tracker } from '../screens/index.js'; 
 
 export default function StackNavigator() {
 
     const Stack = createStackNavigator();
 
     return (
-        <Stack.Navigator initialRouteName="home">
+        <Stack.Navigator initialRouteName="signin">
             <Stack.Screen name='home' 
                 component={Home}
                 options={{
                     header: () => null,
                 }}
             />
-            <Stack.Screen name="tracker"
-             component={Tracker}
-              />
-            <Stack.Screen name='history' component={History} />
             <Stack.Screen name='signin' 
                 component={SignIn} 
                 options={{
                     header: () => null,
                 }}
             />
+            <Stack.Screen name='signup' 
+                component={SignUp} 
+                options={{
+                    header: () => null,
+                }}
+            />
+            <Stack.Screen name='success' 
+                component={Success} 
+                options={{
+                    header: () => null,
+                }}
+            />
+            
+
+            <Stack.Screen name="tracker"
+             component={Tracker}
+             options={{
+                header: () => null,
+            }}
+              />
+
+            <Stack.Screen name="trackingDetails"
+             component={TrackingDetails}
+              />
+
+
+            <Stack.Screen name="addTracker"
+             component={AddTracker}
+              />
+            <Stack.Screen name='history' component={History} />
+            
       </Stack.Navigator>
     )
 }
 
-const styles = StyleSheet.create({})

@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, View  , TouchableOpacity, ScrollView} from 'react-native'
+import { StyleSheet, Text, View  , TouchableOpacity, ScrollView , SafeAreaView} from 'react-native'
 import { AntDesign , FontAwesome , Octicons , MaterialCommunityIcons ,Ionicons,Entypo, FontAwesome5} from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux'
 
 
 function HistoryHeader() {
@@ -24,13 +24,17 @@ function HistoryHeader() {
     )
 }
 
-function HistoryBody(){
+function HistoryBody(props){
+
+    const item  = useSelector(state => state.trackingItem)
+    const {tracking_details,carrier_detail} = item
+
     return (
         <View style={{marginTop:40}}>
             <View style={{display: 'flex' , justifyContent: 'space-between', alignItems: 'center' , flexDirection: 'row' , marginBottom:20}} >
                 <View style={{display:'flex' , justifyContent: 'space-between' , alignItems: 'center' , flexDirection: 'row'}}>
                     <Octicons name='package' color='black' size={20} />
-                    <Text style={{fontWeight: 'bold' , fontSize: 20}}> CH 4251 5218 74 </Text>
+                    <Text style={{fontWeight: 'bold' , fontSize: 20}}> {item.tracking_code} </Text>
                 </View>
             </View>
 
@@ -38,7 +42,7 @@ function HistoryBody(){
                 <View style={{display:'flex' , justifyContent: 'space-between' , alignItems: 'center' , flexDirection: 'row'}}>
                    <View style={styles.dest}>
                         <Text style={{color:'white'}}>from</Text>
-                        <Text style={styles.loc}>China, Shanghai</Text>
+                        <Text style={styles.loc}>{props.tracking_location}</Text>
                    </View>
 
                    <View style={{display:'flex', justifyContent:'center' , alignItems:'center' , flexDirection:'column'}}>
@@ -50,13 +54,13 @@ function HistoryBody(){
 
                    <View style={styles.dest}>
                         <Text style={{color:'white'}}>to</Text>
-                        <Text style={styles.loc}>Russia, Omsk</Text>
+                        <Text style={styles.loc}>HOUSTON TX, 77001</Text>
                    </View>
                 </View>
                 <View style={{display:'flex' , justifyContent: 'space-between' , alignItems: 'center' , flexDirection: 'row'  , marginTop:20}}>
                    <View style={styles.dest}>
                         <Text style={{color:'white'}}>status</Text>
-                        <Text style={styles.loc}>Transit</Text>
+                        <Text style={styles.loc}>{item.status}</Text>
                    </View>
 
                    <View style={styles.dest}>
@@ -197,12 +201,14 @@ function RecieverDetails() {
 }
 
 export default function History() {
+
+    const item = useSelector(state => state.trackingItem)
+
+
     return (
-      
-        
             <View style={{paddingHorizontal:20}}>
                 <ScrollView>
-                    {/* <HistoryHeader/> */}
+                    <HistoryHeader/>
                     <HistoryBody/>
                     <HistoryFooter/>
                     <ProductDetails/>
