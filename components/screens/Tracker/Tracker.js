@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Tracker() {
     //const navigation = useNavigation()
+
     return (
       
         <SafeAreaView style={{flex:1 , backgroundColor: '#F5F5F5'}}>

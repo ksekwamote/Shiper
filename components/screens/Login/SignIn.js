@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
-
+import PushNotification from 'react-native-push-notification';
 
 
 const colors  ={
@@ -97,6 +97,18 @@ const LogFields = () =>{
     )
 }
 export default function SignIn() {
+
+    useEffect(()=>{
+        createChannels();
+    },[])
+
+    const createChannels = ()=>{
+        PushNotification.createChannel({
+            channelId:"test-channel",
+            channelName:"Test Channel"
+        })
+    }
+
     return (
         <SafeAreaView style={{flex:1 , backgroundColor:'#000'}}>
 

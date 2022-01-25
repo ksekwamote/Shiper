@@ -7,6 +7,7 @@ import { useSelector , useDispatch } from 'react-redux';
 import { changeTrackingItem  , changeTrackingInfo} from '../../redux/actions/actions';
 import firebase from 'firebase';
 import axios from 'axios';
+import PushNotification from 'react-native-push-notification';
 
 function statusColor (status){
     switch (status) {
@@ -46,14 +47,23 @@ const TrackingItem = (props) => {
     const user  = firebase.auth().currentUser
     const bool = true
 
-    //CONTEXT API STORE FIREBASE CONFIGS
+    // function handleNotification(item){
+    //         PushNotification.localNotification({
+    //             channelId:"test-channel",
+    //             title:"You clicked on Austriali",
+    //             message: "New York"
+    //         })
+    // }
 
-    function onClickTrackItem(item)
-    {
-            dispatch(changeTrackingItem(item))
-            navigation.navigate('trackingDetails')
+    // //CONTEXT API STORE FIREBASE CONFIGS
 
-    }
+    // function onClickTrackItem(item)
+    // {
+    //         //dispatch(changeTrackingItem(item))
+    //         handleNotification()
+    //         //navigation.navigate('trackingDetails')
+
+    // }
 
     const track = props.trackItem
     const location = track.carrier_detail.origin_location
