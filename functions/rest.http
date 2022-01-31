@@ -1,21 +1,3 @@
-
-GET http://localhost:5001/shiper-ac3d7/us-central1/tracker
-Content-Type: application/json
-
-{
-    "code":"EZ1000000001",
-    "carrier": "USPS"
-}
-
-###
-POST http://localhost:5001/shiper-ac3d7/us-central1/tracker
-Content-Type: application/json
-
-{
-    "code":"EZ1000000001",
-    "carrier": "USPS"
-}
-
 ###
 POST https://us-central1-shiper-ac3d7.cloudfunctions.net/tracker
 Content-Type: application/json
@@ -25,3 +7,8 @@ Content-Type: application/json
     "carrier": "USPS"
 }
 
+###
+GET http://localhost:5001/shiper-ac3d7/us-central1/sendPushNotification
+
+###
+GET http://localhost:5001/shiper-ac3d7/us-central1/testData

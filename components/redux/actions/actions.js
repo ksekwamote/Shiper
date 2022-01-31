@@ -21,3 +21,10 @@ export const changeTrackingID = (id)=>{
         payload: id
     }
 }
+
+export const changeNotificationSettings = (settings) =>{
+    return {
+        type: "CHANGE NOTIFICATION SETTINGS",
+        payload: settings
+    }
+}

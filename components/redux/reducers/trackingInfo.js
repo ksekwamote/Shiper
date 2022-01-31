@@ -245,7 +245,9 @@ let initialState = [
       }
 ]
 
-export default function trackingInfoReducer(state=initialState ,action){
+let initState =[]
+
+export default function trackingInfoReducer(state=initState ,action){
 
     switch (action.type) {
         case "CHANGE TRACKING INFORMATION":

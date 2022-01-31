@@ -18,25 +18,35 @@ function AddTracker() {
     const user  = firebase.auth().currentUser
     const data = firebase.firestore().collection("Trackers").where(firebase.firestore.FieldPath.documentId(), "==", user.uid).get()
 
-
-    function insertFirestore(){
+    function updateFirestore(){
 
         console.log('inser')
-    
-        firebase.firestore().collection('Trackers').doc().set({
-            trackingCode, title: itemDes , carrier ,uid:user.uid
-        }).then(()=>console.log('done')).catch(err=> console.log(err))
+
+        firebase.firestore().collection('Trackers').doc(user.uid)
+        .update({Tracker: firebase.firestore.FieldValue.arrayUnion({
+            trackingCode, title: itemDes , carrier 
+        })}).then(()=>console.log('done')).catch(err=> console.log(err))
+  
     }
+
+    function insertFirestore(){        ///fix
+        firebase.firestore().collection('Trackers').doc(user.uid).set({
+            Tracker: [{
+                trackingCode, title: itemDes , carrier 
+            }]
+        })
+    }
+
 
     function onAddTracker(){
         
         axios.post('https://us-central1-shiper-ac3d7.cloudfunctions.net/tracker' , {code : trackingCode , carrier: carrier})
         .then(res => dispatch(changeTrackingInfo(res.data)))
-        .then(() => insertFirestore())
+        .then(() => updateFirestore())
         .then(()=> navigation.navigate('tracker'))
         .catch(err => console.log(err))
 
-        //console.log('Hello World')
+        console.log('Hello World')
     }
 
     return (
@@ -79,9 +89,13 @@ function AddTracker() {
 
                 <View style={styles.center} >
                     <TouchableOpacity onPress={()=> onAddTracker()} style={{ display: 'flex' , justifyContent:'center' , alignItems: 'center' , backgroundColor:'black' , borderRadius:15 , width: 250 , padding:15}}>
-                        <Text style={{color:'white' , fontWeight:'bold'}}>Add A Tracker</Text>
+                        <Text style={{color:'white' , fontWeight:'bold'}}>Add A Trackers</Text>
                     </TouchableOpacity>
                 </View>
+
+                <TouchableOpacity  style={{marginTop:20}} onPress={() => testFirestore()} > 
+                            <Text>Press here </Text>
+                </TouchableOpacity>
 
 
               

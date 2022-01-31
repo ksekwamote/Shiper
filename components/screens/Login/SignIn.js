@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useState} from 'react';
+import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Button } from 'react-native'
 import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
-import PushNotification from 'react-native-push-notification';
+
+
 
 
 const colors  ={
@@ -13,7 +14,7 @@ const colors  ={
     lightgrey: 'lightgrey'
     }
 
-    
+
 
 
 const Header = () =>{
@@ -54,21 +55,21 @@ const SocialHeader = () =>{
 
 const LogFields = () =>{
 
-    const [email, setEmail] = useState("")
-    const [password , setPassword] = useState("")
-    const navigation = useNavigation()
+  const [email, setEmail] = useState("")
+  const [password , setPassword] = useState("")
+  const navigation = useNavigation()
 
-    function login(user, pass){
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(()=>{
 
-            console.log(`Email: ${user} ... Password: ${pass}`)
 
-         return firebase.auth().signInWithEmailAndPassword(user,pass)
-        })
-        .then(() => navigation.navigate("success"))
-        .catch(err => alert("Password or Email is incorrect"+err)) 
-    }
+  function login(user, pass){
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(()=>{
+       return firebase.auth().signInWithEmailAndPassword(user,pass)
+      })
+      .then(() => navigation.navigate("success"))
+      .catch(err => alert("Password or Email is incorrect"+err)) 
+  }
+
 
     return (
         <View style={{marginTop:40}}>
@@ -98,16 +99,6 @@ const LogFields = () =>{
 }
 export default function SignIn() {
 
-    useEffect(()=>{
-        createChannels();
-    },[])
-
-    const createChannels = ()=>{
-        PushNotification.createChannel({
-            channelId:"test-channel",
-            channelName:"Test Channel"
-        })
-    }
 
     return (
         <SafeAreaView style={{flex:1 , backgroundColor:'#000'}}>
@@ -117,6 +108,18 @@ export default function SignIn() {
             <SocialHeader/>
             <LogFields/>
 
+            {/* <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}>
+       <TouchableOpacity style={{backgroundColor:"skyblue" , padding:10 , borderRadius:5}}  onPress={async () => {
+          await sendPushNotification(expoPushToken);
+        }}  >
+          <Text>Press to Send Notification</Text>
+      </TouchableOpacity> 
+    </View> */}
+
                 
             </View>
 
@@ -124,6 +127,8 @@ export default function SignIn() {
         
     )
 }
+
+
 
 const styles = StyleSheet.create({
 

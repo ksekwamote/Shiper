@@ -57,13 +57,13 @@ const TrackingItem = (props) => {
 
     // //CONTEXT API STORE FIREBASE CONFIGS
 
-    // function onClickTrackItem(item)
-    // {
-    //         //dispatch(changeTrackingItem(item))
-    //         handleNotification()
-    //         //navigation.navigate('trackingDetails')
+    function onClickTrackItem(item)
+    {
+            dispatch(changeTrackingItem(item))
+           // handleNotification()
+            navigation.navigate('trackingDetails')
 
-    // }
+    }
 
     const track = props.trackItem
     const location = track.carrier_detail.origin_location
@@ -103,21 +103,28 @@ export default function Tracking() {
     function getTrackingData(trackingCode , carrier , title){
          axios.post('https://us-central1-shiper-ac3d7.cloudfunctions.net/tracker' , {code:trackingCode , carrier })
             .then(res => dispatch(changeTrackingInfo({...res.data , title})))
+            .then(()=> console.log(trackingInfo))
             .catch(err => console.log("The error here is: "+err))
+    }
+
+    function handleClick(){
+        firebase.firestore().collection("Trackers").doc(user.uid).update({
+            ExpoToken: "575gv434N"
+        })
     }
     
 
     useEffect(() =>  {
-        firebase.firestore().collection('Trackers').where("uid" ,"==" ,user.uid).get()
-             .then(snapshot => snapshot.forEach(item => getTrackingData(item.data().trackingCode ,item.data().carrier , item.data().title) ))//getTrackingData(item.data().trackingCode ,item.data().carrier , item.data().title)))
-            .catch(err=> console.log(err))
+        firebase.firestore().collection('Trackers')
+        .doc(user.uid).get()
+            .then(snapshot => snapshot.data().Tracker.forEach(item => getTrackingData(item.trackingCode , item.carrier ,item.title )))
+        //console.log(user.uid)
     }, []);
 
     return (
         
         <View>
              <TrackingHeader/>
-
                 <FlatList 
                     contentContainerStyle={{ paddingBottom: 30}}
                     data={trackingInfo.map(item => item)}
