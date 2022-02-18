@@ -8,6 +8,7 @@ import Success from './Login/Success'
 import AddTracker from './AddTracker/AddTracker'
 import TrackingDetails from './TrackingDetails.js/TrackingDetails'
 import Notifications from './Notifications/Notifications'
+import TaxCalculator from './TaxCalculator/TaxCalculator'
+import OnboardingScreen from "./Onboarding/Onboarding"
 
-export {History , Tracker ,  Home,SignIn , SignUp , Success , AddTracker , TrackingDetails , Notifications}
-
+export {History , Tracker ,  Home,SignIn , SignUp , Success , AddTracker , TrackingDetails , Notifications , TaxCalculator  , OnboardingScreen }

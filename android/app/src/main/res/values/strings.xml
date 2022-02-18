@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Shiper</string>
+    <string name="facebook_app_id">469150434817936</string>
+    <string name="facebook_client_token">9764148c4f3fdc6898f5a8919fe6b248</string>
 </resources>

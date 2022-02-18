@@ -1,63 +1,83 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import {createStackNavigator } from '@react-navigation/stack'
-import { Home, SignIn,SignUp,Success,History ,AddTracker ,TrackingDetails ,Tracker , Notifications } from '../screens/index.js'; 
+import * as screens from '../screens'
+import Verification from '../screens/Login/Verification'
+
 
 export default function StackNavigator() {
 
     const Stack = createStackNavigator();
 
     return (
-        <Stack.Navigator initialRouteName="notifications">
+        <Stack.Navigator initialRouteName="signup">
             <Stack.Screen name='home' 
-                component={Home}
+                component={screens.Home}
+                options={{
+                    header: () => null,
+                }}
+            />
+            <Stack.Screen name='onboarding' 
+                component={screens.OnboardingScreen}
                 options={{
                     header: () => null,
                 }}
             />
             <Stack.Screen name='signin' 
-                component={SignIn} 
+                component={screens.SignIn} 
                 options={{
                     header: () => null,
                 }}
             />
             <Stack.Screen name='signup' 
-                component={SignUp} 
+                component={screens.SignUp} 
+                options={{
+                    header: () => null,
+                }}
+            />
+            <Stack.Screen name ='verification'
+                component={Verification}
                 options={{
                     header: () => null,
                 }}
             />
             <Stack.Screen name='success' 
-                component={Success} 
+                component={screens.Success} 
                 options={{
                     header: () => null,
                 }}
             />
-            
-
             <Stack.Screen name="tracker"
-             component={Tracker}
+             component={screens.Tracker}
              options={{
                 header: () => null,
             }}
               />
 
             <Stack.Screen name="notifications"
-             component={Notifications}
+             component={screens.Notifications}
              options={{
                 header: () => null,
             }}
               />
 
             <Stack.Screen name="trackingDetails"
-             component={TrackingDetails}
+             component={screens.TrackingDetails}
               />
 
 
             <Stack.Screen name="addTracker"
-             component={AddTracker}
+             component={screens.AddTracker}
               />
-            <Stack.Screen name='history' component={History} />
+
+            <Stack.Screen name='taxCalculator'
+             component={screens.TaxCalculator}
+             options={{
+                header: () => null,
+            }}
+             />
+
+            <Stack.Screen name='history' component={screens.History} />
             
       </Stack.Navigator>
     )

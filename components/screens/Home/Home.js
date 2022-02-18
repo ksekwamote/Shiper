@@ -20,27 +20,33 @@ const COLORS = {primary: '#282534', white: '#fff'};
 const slides = [
   {
     id: '1',
-    image: require('../../../assets/images/home/image1.png'),
+    image: require('../../../assets/images/home/ship2.png'),
     title: 'All in one package tracking',
-    subtitle: 'Track your all packages from anyway in the world , under one roof',
+    subtitle: 'Track your all packages from anywhere in the world , under one roof.',
   },
   {
     id: '2',
-    image: require('../../../assets/images/home/image2.png'),
+    image: require('../../../assets/images/home/tax.png'),
     title: 'Import duty calculator',
-    subtitle: 'Calculate the amount of tax you are required to payfor your goods',
+    subtitle: 'Calculate the entire landed cost for your goods.',
   },
   {
     id: '3',
-    image: require('../../../assets/images/home/image3.png'),
+    image: require('../../../assets/images/home/chat.png'),
+    title: 'Communicate with the Seller',
+    subtitle: 'Establish a constant communication with seller or merchant',
+  },
+  {
+    id: '4',
+    image: require('../../../assets/images/home/push.png'),
     title: 'Instant Notifications',
-    subtitle: 'Be instantly notified when your package has arrived.',
+    subtitle: 'Be instantly notified via Whatsapp or Push Notifications.',
   },
 ];
 
 const Slide = ({item}) => {
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{display: 'flex' , justifyContent:'center' , alignItems: 'center' }}>
       <Image
         source={item?.image}
         style={{height: '75%', width, resizeMode: 'contain'}}
@@ -60,21 +66,58 @@ const Home = () => {
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
+
+    if (currentIndex != slides.length) {
+      let offset = (currentIndex * width);
+      if (currentIndex==0) {
+         offset = (currentIndex * width);
+      }
+      if (currentIndex==1) {
+         offset = (currentIndex * width)+40;
+      }
+      if (currentIndex==2) {
+        offset = (currentIndex * width)+25+20;
+      }
+      if (currentIndex==3) {
+        offset = (currentIndex * width)+25+30+30;
+      }
+      
+     // alert("Width: "+width + " Offset: "+offset)
+      ref?.current.scrollToOffset({offset});
+      setCurrentSlideIndex(currentIndex);
+    }
+
     setCurrentSlideIndex(currentIndex);
   };
 
   const goToNextSlide = () => {
     const nextSlideIndex = currentSlideIndex + 1;
     if (nextSlideIndex != slides.length) {
-      const offset = nextSlideIndex * width;
+      let offset = (nextSlideIndex * width);
+      if (nextSlideIndex==0) {
+         offset = (nextSlideIndex * width);
+      }
+      if (nextSlideIndex==1) {
+         offset = (nextSlideIndex * width)+40;
+      }
+      if (nextSlideIndex==2) {
+        offset = (nextSlideIndex * width)+25+20;
+      }
+      if(nextSlideIndex==3){
+        offset = (nextSlideIndex*width)+25+30+30
+      }
+      
+     // alert("Width: "+width + " Offset: "+offset)
       ref?.current.scrollToOffset({offset});
-      setCurrentSlideIndex(currentSlideIndex + 1);
+      setCurrentSlideIndex(currentSlideIndex);
     }
+
+    setCurrentSlideIndex(nextSlideIndex)
   };
 
   const skip = () => {
     const lastSlideIndex = slides.length - 1;
-    const offset = lastSlideIndex * width;
+    const offset = (lastSlideIndex * width)+25+30;
     ref?.current.scrollToOffset({offset});
     setCurrentSlideIndex(lastSlideIndex);
   };
@@ -201,8 +244,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
+    width: '100%'
   },
   indicator: {
     height: 2.5,

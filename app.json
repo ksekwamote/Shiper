@@ -4,15 +4,17 @@
     "slug": "shiper",
     "version": "1.0.0",
     "notification": {
-        "icon": "https://i.postimg.cc/CMN5wzfV/ship.png"
+      "icon": "https://i.postimg.cc/CMN5wzfV/ship.png"
     },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.ksekwamote.shiper"
+    }
   },
   "android": {
     "googleServicesFile": "./google-services.json"
   },
   "name": "Shiper"
- 
 }

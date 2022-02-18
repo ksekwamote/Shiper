@@ -7,7 +7,6 @@ import { useSelector , useDispatch } from 'react-redux';
 import { changeTrackingItem  , changeTrackingInfo} from '../../redux/actions/actions';
 import firebase from 'firebase';
 import axios from 'axios';
-import PushNotification from 'react-native-push-notification';
 
 function statusColor (status){
     switch (status) {
@@ -28,14 +27,56 @@ function statusColor (status){
     }
 }
 
-const TrackingHeader = () => {
+
+const TrackingTabs  = (props) => {
+    return (
+        
+       <TouchableOpacity onPress={()=> props.setSelected(props.status)}  key={props.key}  style={[styles.UnselectedStatus ,props.selected && styles.selectedStatus ]} >
+            <Text style={[styles.unselectedText ,props.selected && styles.selectedText ]} >{props.status}</Text>
+       </TouchableOpacity>
+    )
+}
+
+
+const TrackingHeader = (props) => {
+
+            /***SUPER SLOWWWWWW */
+
+        const [selected  , setSelected] = React.useState("All")
+        const status = ["All","pre_transit" , "in_transit" , "out_for_delivery" , "delivered" , "return_to_sender" , "failure"]
+
+        function onSelect(select) {
+                setSelected(select)
+                props.setSelect(select)
+          }
+
     return (
             <View style={styles.container}>
-                <Text style={styles.font} >Your Parcels</Text>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.categoryContainer}
+                >
+                    {
+                        status.map((item,index)=>{
+                                return (
+                                    <TrackingTabs
+                                    selected={item==selected}
+                                    key={index}
+                                    status={item}
+                                    setSelected={onSelect}
+                                    />
+                                )
+                        })
+                    }
+
+                </ScrollView>
+
+                {/* <Text style={styles.font} >Your Parcels</Text>
                 <TouchableOpacity style={styles.equal}>
-                    <SimpleLineIcons style={styles.rotate} name="equalizer" size={20} color="black" />
-                   
+                    <SimpleLineIcons style={styles.rotate} name="equalizer" size={20} color="black" />    
                 </TouchableOpacity>
+                <TrackingTabs/> */}
             </View>
     )
 
@@ -47,15 +88,6 @@ const TrackingItem = (props) => {
     const user  = firebase.auth().currentUser
     const bool = true
 
-    // function handleNotification(item){
-    //         PushNotification.localNotification({
-    //             channelId:"test-channel",
-    //             title:"You clicked on Austriali",
-    //             message: "New York"
-    //         })
-    // }
-
-    // //CONTEXT API STORE FIREBASE CONFIGS
 
     function onClickTrackItem(item)
     {
@@ -99,6 +131,7 @@ export default function Tracking() {
     const trackingInfo = useSelector(state => state.trackingInfo)
     const dispatch = useDispatch()
     const user  = firebase.auth().currentUser
+    const [select  , setSelect] = React.useState("All")
 
     function getTrackingData(trackingCode , carrier , title){
          axios.post('https://us-central1-shiper-ac3d7.cloudfunctions.net/tracker' , {code:trackingCode , carrier })
@@ -124,18 +157,33 @@ export default function Tracking() {
     return (
         
         <View>
-             <TrackingHeader/>
+             <TrackingHeader
+                setSelect={setSelect}
+             />
                 <FlatList 
                     contentContainerStyle={{ paddingBottom: 30}}
                     data={trackingInfo.map(item => item)}
                     keyExtractor={item => item.key}
                     renderItem={({item , index})=>{
-                        return(
-                            <TrackingItem 
-                            key={index}
-                            trackItem={item}
-                            />
-                        )
+                        if (select=="All")
+                            return(
+
+                                <TrackingItem 
+                                key={index}
+                                trackItem={item}
+                                />
+                            )
+                        if(item.status ==select){
+                            return(
+
+                                <TrackingItem 
+                                key={index}
+                                trackItem={item}
+                                />
+                            )
+
+                        }
+                    
                     }}
                 
                 />
@@ -161,6 +209,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start' , 
         flexDirection: 'column'
     },
+    center:{
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center'
+    },
 
     deliveryPack: {
         display:'flex' , 
@@ -184,6 +237,11 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0
     },
+    categoryContainer:{
+        flexDirection:"row",
+        justifyContent: "space-between",
+      
+      },
 
     font: {
         fontWeight: 'bold',
@@ -236,5 +294,31 @@ const styles = StyleSheet.create({
         paddingBottom:5
         
     },
+    selectedStatus: { 
+        display:'flex' ,
+    justifyContent:'center' ,
+    borderColor:"#fff" ,
+     marginRight:10,
+     alignItems:'center', 
+     padding:10 ,
+     paddingHorizontal:15 ,
+     backgroundColor:"#000" ,
+     borderRadius:25
+    },
+
+    UnselectedStatus: {
+         display:'flex' ,
+    justifyContent:'center' ,
+    borderColor:"#000" ,
+    borderWidth:1,
+     marginRight:10,
+     alignItems:'center', 
+     padding:10 ,
+     paddingHorizontal:15 ,
+     backgroundColor:"#fff" ,
+     borderRadius:25} ,
+     selectedText:{color:"#fff" , marginBottom:3},
+     unselectedText:{color:"#000" , marginBottom:3},
+
 
 })

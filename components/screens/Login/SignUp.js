@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Pressable } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Pressable , Image , KeyboardAvoidingView } from 'react-native'
 import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
+import * as Google from 'expo-google-app-auth';
+import * as Facebook from 'expo-facebook';
+import { ScrollView } from 'react-native';
+
 
 
 
@@ -10,7 +14,9 @@ const colors  ={
     grey :'#1E1E1E',
     light:'#323232',
     white: '#fff' ,
-    lightgrey: 'lightgrey'
+    lightgrey: 'lightgrey' ,
+    googlered: "#DB4437",
+    faceblue:"#4267B2"
     }
 
     
@@ -38,7 +44,7 @@ const SocialHeader = () =>{
 
     return (
         <View style={{marginTop:40}}>
-                <Text style={{color: '#fff'}} >Login in wuth one of the following options</Text>
+                <Text style={{color: '#fff'}} ></Text>
                 <View style={styles.social}>
                     <TouchableOpacity style={styles.socialButton}>
                         <FontAwesome name="google" size={25} color="white" />
@@ -79,17 +85,79 @@ function createUser(email , pass , confirmpass){
     if(pass==confirmpass) 
     {
        firebase.auth().createUserWithEmailAndPassword(email ,pass)
-       .then(()=> alert("User succesfully set"))
-       .then(()=> navigation.navigate("success"))
+       .then(userCredential => {
+           userCredential.user.sendEmailVerification()
+           //firebase.auth().signOut()
+       })
+       .then(()=> navigation.navigate("verification"))
        .catch(()=>alert("User not set , Please confirm your details and try again")) //Existing user
     }
     else{
         alert('Password and Confirmation password do not match')
     }
-}
+  }
+
+  
+  async function signInWithGoogleAsync() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: "264640785874-j4pi2444li28vhu95oosv19a2h13ggrk.apps.googleusercontent.com",
+        scopes: ['profile', 'email'],
+      });
+  
+      if (result.type === 'success') {
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+        firebase.auth().signInWithCredential(credential)
+            .then(user => {
+                navigation.navigate("success")
+            })
+            .catch((error) => {
+                Alert.alert('Error occurred ', error)
+           });
+        
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+        alert(`Google Login Error: ${e}`);
+    }
+  }
+
+  async function signInWithFacebookAsync() {
+    try {
+      await Facebook.initializeAsync({
+        appId: '469150434817936',
+      });
+      const { type, token, expirationDate, permissions, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync({
+          permissions: ['public_profile' , "email"],
+        });
+      if (type === 'success') {
+
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        firebase.auth().signInWithCredential(credential)
+            .then(user => { 
+                 navigation.navigate("success")
+            })
+            .catch((error) => {
+                 Alert.alert('Error occurred ', error)
+            });
+    //     const response = await fetch(`https://graph.facebook.com/me?access_token=EAAGqsJkDd5ABAHCfWLgp4mmDed6pRraMo5WtZAx1ZBHfGtr8g1Gv1OD8xudUfKkpm31CEMRghRZAKWSONsFUHG2wWVp3W9pQrEfzfZBlr0QIuF7Ke63BGwP2crsZB6HrERQyEaT7N0NP1Nxt4mQIZAWEF0ZAt3o4NlodEUN9X7BBFGovscM9ZCWXqlmjTyPwHuzgTb2uQ6RDFUiLEgTPEAVM`);
+    //   Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+    
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
+
 
     return (
-        <View style={{marginTop:40}}>
+        <View style={{marginTop:20 , marginHorizontal:10}}>
             <View>
                 <Text style={styles.inputLabel}>Email</Text>
                 <TextInput onChangeText={setEmail} style={styles.textInput} placeholderTextColor={colors.lightgrey} placeholder='Enter your email address'></TextInput>
@@ -102,10 +170,23 @@ function createUser(email , pass , confirmpass){
                 <Text style={styles.inputLabel}>Confirm Password</Text>
                 <TextInput onChangeText={setConfirmPass} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='Confirm your password'></TextInput>
             </View>
-            <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' , marginTop:225}}>
+            <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' }}>
                 <View>
                     <TouchableOpacity onPress={()=>createUser(email , password , confirmPass)} style={{ display: 'flex' , justifyContent:'center' , alignItems: 'center' , backgroundColor:colors.white , borderRadius:15 , width: 250 , padding:15}}>
-                        <Text style={{color:'#000' , fontWeight:'bold'}}>CREATE AN ACCOUNT</Text>
+                        <Text style={{color:'#000' , fontWeight:'bold'}}>CREATE ACCOUNT</Text>
+                    </TouchableOpacity>
+                </View>
+             
+                <View style={{marginBottom:10, marginTop:10}}>
+                    <TouchableOpacity onPress={()=>signInWithGoogleAsync()} style={{ display: 'flex' , justifyContent:'center' ,flexDirection:'row' ,alignItems: 'center' , backgroundColor:colors.googlered , borderRadius:10 , width: 250 , padding:10}}>
+                         <FontAwesome style={{marginRight:10}} name="google" size={20} color="white" />
+                        <Text style={{color:'#fff' , fontWeight:'bold'}}>Sign Up with Google</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity onPress={()=>signInWithFacebookAsync()} style={{ display: 'flex' , justifyContent:'center' ,flexDirection:'row' , alignItems: 'center' , backgroundColor:colors.faceblue , borderRadius:10 , width: 250 , padding:10}}>
+                    <FontAwesome style={{marginRight:10}} name="facebook" size={20} color="white" />
+                        <Text style={{color:'#fff' , fontWeight:'bold'}}>Sign Up with Facebook</Text>
                     </TouchableOpacity>
                 </View>
                 <Pressable style={{marginTop:10}} onPress={()=> navigation.navigate('signin') } >
@@ -119,17 +200,16 @@ function createUser(email , pass , confirmpass){
 }
 export default function SignUp() {
     return (
-        <SafeAreaView style={{flex:1 , backgroundColor:'#000'}}>
+        <ScrollView style={{flex:1 , backgroundColor:'#000'  }}>
 
             
             <Header/>
           
             <LogFields/>
 
-                
-          
 
-        </SafeAreaView>
+
+        </ScrollView>
         
     )
 }
@@ -163,7 +243,8 @@ center: {
     } , 
     inputLabel:{
         color: 'white',
-        marginBottom:10
+        marginBottom:10 ,
+        fontWeight:'bold'
     },
     textInput: {
         borderRadius: 10,
