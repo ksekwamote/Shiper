@@ -171,8 +171,8 @@ function VerifyOrContinue({phoneNumber , setPhoneNumber , setVerify})
   function uploadPhoneNumber(){
 
     if(user){
-      firebase.firestore().collection('Trackers').doc(user.uid).set({
-        Whatsapp: phoneNumber
+      firebase.firestore().collection('Trackers').doc(user.uid).update({
+        whatsapp: phoneNumber
     }).then(() => setVerify(false))
     .catch(console.log)
     }
@@ -263,8 +263,9 @@ export default function Whatsapp() {
        console.log('Were in user')
        firebase.firestore().collection('Trackers').doc(user.uid).get()
        .then(snapshot => {
-         if(snapshot.data.Whatsapp){
-           setPhoneNumber(snapshot.data.Whatsapp)
+         console.log(snapshot.data().Whatsapp)
+         if(snapshot.data().whatsapp){
+           setPhoneNumber(snapshot.data().whatsapp)
            setVerify(false)
          }
        })
@@ -272,7 +273,7 @@ export default function Whatsapp() {
      }
   }
 
-  React.useEffect(()=>{
+  React.useLayoutEffect(()=>{
         checkNumber()
   },[])
 
@@ -280,6 +281,7 @@ export default function Whatsapp() {
 
   return (
    <SafeAreaView style={{flex:1}}>
+     {/* <Pressable onPress={()=> console.log(firebase.auth().currentUser)}><Text>Press me</Text></Pressable> */}
      { 
      verify ? 
      <VerifyOrContinue phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} setVerify= {setVerify} />
@@ -287,7 +289,7 @@ export default function Whatsapp() {
      <View>
      <NotificationsHeader/>
      <View style={{display:'flex' , justifyContent:'center' ,alignItems:'center' , marginTop:20}} >
-             <Text style={{fontWeight:'bold', fontSize:18, color:"#455A64"}} >77105790</Text>
+             <Text style={{fontWeight:'bold', fontSize:18, color:"#455A64"}} >{phoneNumber}</Text>
      </View>
    
     <ScrollView style={{paddingBottom:20}} >

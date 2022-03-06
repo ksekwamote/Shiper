@@ -20,8 +20,6 @@ function AddTracker() {
 
     function updateFirestore(){
 
-        console.log('inser')
-
         firebase.firestore().collection('Trackers').doc(user.uid)
         .update({Tracker: firebase.firestore.FieldValue.arrayUnion({
             trackingCode, title: itemDes , carrier 

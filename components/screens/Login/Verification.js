@@ -12,6 +12,25 @@ export default function Verification() {
     const [limit , setLimit] = React.useState(60)
     const navigation = useNavigation()
 
+
+    function defaultData(){
+        const user  = firebase.auth().currentUser
+        const notifications = {
+            delivered: true,
+            failure: true,
+            in_transit:true,
+            out_for_deliver:true,
+            pre_transit:true,
+            return_to_sender: true
+        }
+        
+        firebase.firestore().collection('Trackers').doc(user.uid).set({
+          Notifications: notifications
+        }).then(()=> navigation.navigate("success"))
+        .catch(console.log)
+    }
+
+
     function resendVerificationLink(){
        
         setTimer(limit+60)
@@ -33,7 +52,11 @@ export default function Verification() {
     function checkVerify(){
         firebase.auth().currentUser.reload()
         .then(() =>{
-            if (firebase.auth().currentUser.emailVerified) navigation.navigate("success")
+            if (firebase.auth().currentUser.emailVerified) 
+            {
+
+             defaultData()
+        }
         })
         .catch(err => console.log(err))
     }
