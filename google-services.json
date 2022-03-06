@@ -7,12 +7,49 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:264640785874:android:9d2e2c1b58e463f0e36c0b",
+        "mobilesdk_app_id": "1:264640785874:android:b8ff44a3c727b434e36c0b",
+        "android_client_info": {
+          "package_name": "host.exp.exponent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "264640785874-70fddq2sflp3higjcc2s6v6eukudu03t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkdPK3A7mYmWoyLJcrd39QPbT3q4vNMVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "264640785874-70fddq2sflp3higjcc2s6v6eukudu03t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264640785874:android:922bef4120e6b180e36c0b",
         "android_client_info": {
           "package_name": "shiper.org"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "264640785874-2g45d2c6in1i2p6cnpavc48817unrfuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shiper.org",
+            "certificate_hash": "f7616e0c676707b3c4f1c18aa574278f549631e1"
+          }
+        },
         {
           "client_id": "264640785874-70fddq2sflp3higjcc2s6v6eukudu03t.apps.googleusercontent.com",
           "client_type": 3

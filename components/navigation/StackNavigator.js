@@ -10,7 +10,7 @@ export default function StackNavigator() {
     const Stack = createStackNavigator();
 
     return (
-        <Stack.Navigator initialRouteName="signup">
+        <Stack.Navigator initialRouteName="Notifications">
             <Stack.Screen name='home' 
                 component={screens.Home}
                 options={{
@@ -54,11 +54,23 @@ export default function StackNavigator() {
             }}
               />
 
-            <Stack.Screen name="notifications"
+            <Stack.Screen name="Notifications"
              component={screens.Notifications}
-             options={{
-                header: () => null,
-            }}
+              />
+            <Stack.Screen name="Whatsapp Notifications"
+             component={screens.Whatsapp}
+              />
+            <Stack.Screen name="Push Notifications"
+             component={screens.Push}
+              />
+            <Stack.Screen name="Push Notification"
+             component={screens.Push}
+              />
+            <Stack.Screen name="Whatsapp Notification"
+             component={screens.Whatsapp}
+              />
+            <Stack.Screen name="Verify Number"
+             component={screens.VerifyNumber}
               />
 
             <Stack.Screen name="trackingDetails"

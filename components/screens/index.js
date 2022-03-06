@@ -10,5 +10,9 @@ import TrackingDetails from './TrackingDetails.js/TrackingDetails'
 import Notifications from './Notifications/Notifications'
 import TaxCalculator from './TaxCalculator/TaxCalculator'
 import OnboardingScreen from "./Onboarding/Onboarding"
+import Whatsapp from './Notifications/Whatsapp'
+import Push from './Notifications/Push'
+import VerifyNumber from './Notifications/VerifyNumber'
 
-export {History , Tracker ,  Home,SignIn , SignUp , Success , AddTracker , TrackingDetails , Notifications , TaxCalculator  , OnboardingScreen }
+
+export {History , Tracker , VerifyNumber ,Whatsapp , Push,  Home,SignIn , SignUp , Success , AddTracker , TrackingDetails , Notifications , TaxCalculator  , OnboardingScreen }

@@ -59,7 +59,7 @@ const SocialHeader = () =>{
             const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
             firebase.auth().signInWithCredential(credential)
                 .then(user => {
-                    navigation.navigate("success")
+                    navigation.navigate("Notifications")
                 })
                 .catch((error) => {
                     Alert.alert('Error occurred ', error)
@@ -88,7 +88,7 @@ const SocialHeader = () =>{
             const credential = firebase.auth.FacebookAuthProvider.credential(token);
             firebase.auth().signInWithCredential(credential)
                 .then(user => { 
-                     navigation.navigate("success")
+                     navigation.navigate("Notifications")
                 })
                 .catch((error) => {
                      Alert.alert('Error occurred ', error)
@@ -136,7 +136,7 @@ const LogFields = () =>{
       .then(()=>{
        return firebase.auth().signInWithEmailAndPassword(user,pass)
       })
-      .then(() => navigation.navigate("success"))
+      .then(() => navigation.navigate("Notifications"))
       .catch(err => alert("Password or Email is incorrect"+err)) 
   }
 

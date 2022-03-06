@@ -1,13 +1,9 @@
-import { View, Text, SafeAreaView , Switch , StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView , Switch , StyleSheet, ScrollView , Image } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import React from 'react';
 import firebase from 'firebase';
 import { useDispatch , useSelector } from 'react-redux';
 import { changeNotificationSettings } from '../../redux/actions/actions'
-import { TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 
 
 
@@ -18,20 +14,24 @@ function NotificationsHeader()
 
   return (
 
-    <View style={{display: 'flex' , justifyContent: 'space-between' , alignItems:'flex-start' , flexDirection:'row' , paddingHorizontal:20 }}>
+    <View style={{display: 'flex' , padding:10, backgroundColor:"#000" , justifyContent: 'space-between' , alignItems:'flex-start' , flexDirection:'row' , paddingHorizontal:20 }}>
     <View style={{marginRight:20}}>
-        <Text style={{fontSize:20}}>Allow Push Notificationss</Text>
-        <Text>Recieve push notifcations on key status updates</Text>
+        <Text style={{fontSize:18 , color:"#fff" , fontWeight:'bold'}}>Allow Push Notifications</Text>
+        <Text style={{color:"#fff"}} >Recieve push notifcations on key status updates.</Text>
     </View>
     <View style={{alignItems: 'center'}} >
-
+{/* 
       <Switch
         trackColor={{ false: "#767577", true: "#81b0ff" }}
         thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
         ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
         value={isEnabled}
-        />
+        /> */}
+
+        
+<Image source={require("../../../assets/images/icons/notification.png")}/>
+
 
     </View>
 </View>
@@ -50,9 +50,9 @@ function Setting(props)
   function updateToFirebase(obj){
           
        dispatch(changeNotificationSettings(obj))
-       firebase.firestore().collection('Trackers').doc(user.uid).update({
-        Notifications: obj
-      })
+      //  firebase.firestore().collection('Trackers').doc(user.uid).update({
+      //   Notifications: obj
+      // })
   }
 
   function sortObject(obj){
@@ -60,7 +60,7 @@ function Setting(props)
       All: obj.All,
       pre_transit: obj.pre_transit,
       in_transit:obj.in_transit,
-      out_for_delivery:obj.out_of_delivery,
+      out_for_delivery:obj.out_for_delivery,
       delivered:obj.delivered,
       return_to_sender:obj.return_to_sender,
       failure:obj.failure,
@@ -77,7 +77,7 @@ function Setting(props)
           All: bool,
           pre_transit: bool,
           in_transit:bool,
-          out_of_delivery:bool,
+          out_for_delivery:bool,
           delivered:bool,
           return_to_sender:bool,
           failure:bool,
@@ -107,20 +107,44 @@ function Setting(props)
 
     return (
 
-      <View style={{  justifyContent:'space-between' , marginBottom:-25 ,padding:20,flexDirection:'row' , paddingHorizontal:20 , marginTop:25 ,borderTopWidth:0.5 , borderTopColor:'grey' }}>
+      <View style={{  justifyContent:'space-between' , marginBottom:-25 ,padding:10,flexDirection:'row' , paddingHorizontal:20 , marginTop:25 ,borderTopWidth:0.5 , borderTopColor:'#a6a6a6' }}>
       <View style={{marginRight:20 , display:'flex', justifyContent:'center' , alignItems:'center'}}>
         <View style={{alignSelf:'center'}}>
                 <Text style={{fontSize:15}} >{props.settingName}</Text>
         </View>
+        
           
       </View>
-      <View style={{justifyContent:'center' , alignItems:'center'}} >
+      <View style={{ display:'flex', flexDirection:'row',justifyContent:'space-between' , alignItems:'center'}} >
   
-        <Checkbox
+        {/* <Checkbox
           value={props.settingState}
           onValueChange={setSetting}
           style={styles.checkbox}
+        /> */}
+
+          {
+              props.settingState ?
+        <View style={{backgroundColor:"#000", marginRight:10, padding:10 , paddingHorizontal:12 }}>
+          <Text style={{color:"#fff"}} >ON</Text>
+        </View> :
+        <View style={{backgroundColor:"whitesmoke" , marginRight:10 , padding:10 ,borderColor:"#000" , borderWidth:1 }}>
+          <Text style={{color:"#000"}} >OFF</Text>
+        </View>
+}
+
+          <View>
+
+          <Switch
+        trackColor={{ false: "#767577", true: "#81b0ff"}}
+        thumbColor={props.settingState ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={setSetting}
+        value={props.settingState}
         />
+
+          </View>
+     
   
       </View>
   </View>
@@ -137,33 +161,27 @@ function NoticationSettings()
 }
 
 
-export default function Notifications() {
+export default function Push() {
 
 
   
   const settings  = useSelector(state => state.notificationSetting)
-  const navigation = useNavigation()
 
   return (
-   <SafeAreaView>
-     <TouchableOpacity onPress={()=> navigation.navigate('Push Notifications') } style={{ padding:10 , borderWidth:0.5 , borderColor:"grey" ,display:'flex' , justifyContent:'space-between' ,alignItems:'center' , flexDirection:'row'}} >
-       <View>
-          <Text style={{fontSize:20}} >Push Notifications</Text>
-       </View>
-       <View>
-            <AntDesign name="arrowright" size={30}  />
-       </View>
-     </TouchableOpacity>
-     <TouchableOpacity onPress={()=> navigation.navigate('Whatsapp Notifications') } style={{ padding:10 , borderWidth:0.5 , borderColor:"grey" ,display:'flex' , justifyContent:'space-between' ,alignItems:'center' , flexDirection:'row'}} >
-       <View>
-          <Text style={{fontSize:20}} >Whatsapp Notifications</Text>
-       </View>
-       <View>
-            <AntDesign name="arrowright" size={30}  />
-       </View>
-     </TouchableOpacity>
-    
-      
+   <SafeAreaView style={{flex:1}}>
+     <NotificationsHeader/>
+     <ScrollView style={{paddingBottom:20}} >
+     {
+       Object.keys(settings).map((key , index) =>
+       <Setting
+        setting={settings} 
+        key={index} 
+        settingName={key} 
+        settingState={settings[key]} 
+        />
+        )
+     }
+     </ScrollView>
    </SafeAreaView>
   );
 }

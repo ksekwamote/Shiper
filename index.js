@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import { registerRootComponent } from 'expo';
-import PushNotification from "react-native-push-notification";
 
 import App from './App';
 
