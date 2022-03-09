@@ -4,7 +4,7 @@ import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-
+import defaultData from './defaultData';
 
 
 
@@ -107,6 +107,7 @@ async function sendPushNotification(expoPushToken) {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
+      const defaultCode = await defaultData(token)
 
       firebase.firestore().collection("Trackers").doc(user.uid).update({
         ExpoToken: token

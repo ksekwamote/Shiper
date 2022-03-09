@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Button , ImageBackground , Alert } from 'react-native'
+import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Button , ImageBackground , Alert , ActivityIndicator } from 'react-native'
 import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
@@ -17,7 +17,6 @@ const colors  ={
     lightgrey: 'lightgrey'
     }
 
-
 const Header = () =>{
     return (
         <View style={{display:'flex', flexDirection: 'row'}}>
@@ -34,7 +33,7 @@ const Header = () =>{
     )
 }
 
-const SocialHeader = () =>{
+const SocialHeader = ({setLoading}) =>{
 
     const navigation = useNavigation()
 
@@ -48,6 +47,7 @@ const SocialHeader = () =>{
     
 
     async function signInWithGoogleAsync() {
+        setLoading(true)
         try {
           const result = await Google.logInAsync({
             androidClientId: "264640785874-j4pi2444li28vhu95oosv19a2h13ggrk.apps.googleusercontent.com",
@@ -59,21 +59,26 @@ const SocialHeader = () =>{
             const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
             firebase.auth().signInWithCredential(credential)
                 .then(user => {
-                    navigation.navigate("Notifications")
+                    navigation.navigate("success")
                 })
                 .catch((error) => {
-                    Alert.alert('Error occurred ', error)
+                    setLoading(false)
+                    console.log("Google Login: "+error)
+                    Alert.alert('Error occurred, please try logging in again.')
                });
             
           } else {
+              setLoading(false)
             return { cancelled: true };
           }
         } catch (e) {
-            alert(`Google Login Error: ${e}`);
+            setLoading(false)
+            alert(`Google Login Error: ${e}. Please try to log in in again.`);
         }
       }
     
       async function signInWithFacebookAsync() {
+          setLoading(true)
         try {
           await Facebook.initializeAsync({
             appId: '469150434817936',
@@ -88,19 +93,23 @@ const SocialHeader = () =>{
             const credential = firebase.auth.FacebookAuthProvider.credential(token);
             firebase.auth().signInWithCredential(credential)
                 .then(user => { 
-                     navigation.navigate("Notifications")
+                     navigation.navigate("success")
                 })
                 .catch((error) => {
-                     Alert.alert('Error occurred ', error)
+                    setLoading(false)
+                    console.log('Facebook Error: '+ error)
+                    Alert.alert('Error occurred, please try logging in again.')
                 });
         //     const response = await fetch(`https://graph.facebook.com/me?access_token=EAAGqsJkDd5ABAHCfWLgp4mmDed6pRraMo5WtZAx1ZBHfGtr8g1Gv1OD8xudUfKkpm31CEMRghRZAKWSONsFUHG2wWVp3W9pQrEfzfZBlr0QIuF7Ke63BGwP2crsZB6HrERQyEaT7N0NP1Nxt4mQIZAWEF0ZAt3o4NlodEUN9X7BBFGovscM9ZCWXqlmjTyPwHuzgTb2uQ6RDFUiLEgTPEAVM`);
         //   Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         
           } else {
             // type === 'cancel'
+            setLoading(false)
           }
         } catch ({ message }) {
-          alert(`Facebook Login Error: ${message}`);
+            setLoading(false)
+          alert(`Facebook Login Error: ${message}.Please try again.`);
         }
       }
 
@@ -120,10 +129,10 @@ const SocialHeader = () =>{
                 </View>
             </View>
     )
-
+ 
 }
 
-const LogFields = () =>{
+const LogFields = ({setLoading}) =>{
 
   const [email, setEmail] = useState("")
   const [password , setPassword] = useState("")
@@ -132,12 +141,13 @@ const LogFields = () =>{
 
 
   function login(user, pass){
+      setLoading(true)
       firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(()=>{
        return firebase.auth().signInWithEmailAndPassword(user,pass)
       })
-      .then(() => navigation.navigate("Notifications"))
-      .catch(err => alert("Password or Email is incorrect"+err)) 
+      .then(() => navigation.navigate("success"))
+      .catch(err => {alert("Password or Email is incorrect. Please try again."); setLoading(false) }) 
   }
 
 
@@ -170,12 +180,26 @@ const LogFields = () =>{
 export default function SignIn() {
 
     const image = { uri: "https://reactjs.org/logo-og.png" };
+    const [loading, setLoading] = useState(false)
     return (
       
+      
+          
            <ImageBackground source={require("../../../assets/images/home/gold2.jpg")} resizeMode="stretch" style={styles.image} >
-                <Header/>
-                <SocialHeader/>
-                <LogFields/>
+                 {
+                     loading ?
+                 <View style={styles.center} >
+                    <ActivityIndicator color={"#fff"} animating={loading} size={"large"} />
+                    <Text style={{textAlign:'center' ,color:'#fff' ,fontSize:18 ,marginTop:20}} >Loading...</Text>
+              </View>
+                :
+                <View>
+                     <Header/>
+                    <SocialHeader setLoading={setLoading} />
+                    <LogFields setLoading={setLoading} />
+                </View>
+               
+                 }
            </ImageBackground>
             
           
