@@ -22,29 +22,54 @@ export default function defaultData(expoToken){
             pre_transit:true,
             return_to_sender:true
         }
+        const settings = {
+            sort_according_to_recent: true,
+            bulk_uploading:true,
+            shipment_avatar: true,
+            enable_notificatons:true
+        }
 
 
+        const trackersRef = firebase.firestore().collection("Trackers").doc(user.uid)
 
-    firebase.firestore().collection("Trackers").doc(user.uid).get()
-        	.then(snapshot=>{
-                    if(!snapshot.data().PushNotification){
-                        console.log('No Push Notifications')
-                        firebase.firestore().collection('Trackers').doc(user.uid).set({
-                            PushNotification: pushNotification,
-                            WhatsappNotification: whatsappNotification,
-                            ExpoToken: expoToken
-                        }).then(()=> console.log('Hello World')).catch(console.log)                
-                     }
-
-                     console.log('Push Notifications')
-            })
-            .catch(err => {
-                console.log(err)
-                firebase.firestore().collection('Trackers').doc(user.uid).set({
+        trackersRef.get()
+        .then((docSnapshot) => {
+          if (docSnapshot.exists) {
+            console.log(`There's a snapshot`)
+          } else {
+            trackersRef.set({
+                Menu:{
                 PushNotification: pushNotification,
                 WhatsappNotification: whatsappNotification,
-                ExpoToken: expoToken
-            }).then(()=> console.log('Hello World')).catch(console.log)})
+                settings
+            }})
+          }
+      });
+    
+        	// .then(snapshot=>{
+                    // if(!snapshot.data().Notifications){
+                    //     firebase.firestore().collection('Trackers').doc(user.uid).set({
+                    //         Menu:{
+                    //         PushNotification: pushNotification,
+                    //         WhatsappNotification: whatsappNotification,
+                    //         settings,
+                    //         ExpoToken: expoToken
+                    //     }}).then(()=> console.log('Hello World')).catch(console.log)                
+                    //  }
+
+            //          console.log('Push Notifications')
+            // })
+            // .catch(err => {
+            //     console.log(err)
+            //     firebase.firestore().collection('Trackers').doc(user.uid).set({
+            //         Notifications:{
+            //             PushNotification: pushNotification,
+            //             WhatsappNotification: whatsappNotification,
+            //             settings,
+            //             ExpoToken: expoToken
+            //         }
+            // }).then(()=> console.log('Hello World')).catch(console.log)
+        // })
 
 
 }

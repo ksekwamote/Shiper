@@ -13,6 +13,29 @@ import OnboardingScreen from "./Onboarding/Onboarding"
 import Whatsapp from './Notifications/Whatsapp'
 import Push from './Notifications/Push'
 import VerifyNumber from './Notifications/VerifyNumber'
+import Menu from './Menu/Menu'
+import Settings, { Account } from './Menu/Settings'
+import {AboutUs , Report} from "./Menu/Support"
 
 
-export {History , Tracker , VerifyNumber ,Whatsapp , Push,  Home,SignIn , SignUp , Success , AddTracker , TrackingDetails , Notifications , TaxCalculator  , OnboardingScreen }
+export {
+       History, 
+       Tracker ,
+       VerifyNumber ,
+       Menu ,
+       Whatsapp , 
+       Push,   
+       Home,
+       SignIn , 
+       SignUp , 
+       Success , 
+       AddTracker , 
+       TrackingDetails,
+       Notifications, 
+       TaxCalculator, 
+       OnboardingScreen,
+       Settings,
+       Account,
+       Report,
+       AboutUs
+    }

@@ -1,11 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View , SafeAreaView , TextInput , Picker  , TouchableOpacity, Pressable} from 'react-native'
+import { StyleSheet, Text, View , TextInput , Picker  , TouchableOpacity, ScrollView} from 'react-native'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeTrackingInfo } from '../../redux/actions/actions'
 import { useNavigation } from '@react-navigation/native'
-//import firebase from '../../config/fireConfig'
+import { ActivityIndicator, Colors } from 'react-native-paper';
 import firebase from 'firebase'
+
+
 
 function AddTracker() {
 
@@ -13,6 +15,7 @@ function AddTracker() {
     const ID = useSelector(state => state.trackingID)
     const [trackingCode , setTrackingCode] = React.useState(ID)
     const [itemDes , setItemDes] = React.useState('')
+    const [loading ,setLoading] = React.useState(false)
     const dispatch = useDispatch()
     const navigation = useNavigation()
     const user  = firebase.auth().currentUser
@@ -37,18 +40,19 @@ function AddTracker() {
 
 
     function onAddTracker(){
-        
+        setLoading(true)
         axios.post('https://us-central1-shiper-ac3d7.cloudfunctions.net/tracker' , {code : trackingCode , carrier: carrier})
         .then(res => dispatch(changeTrackingInfo(res.data)))
         .then(() => updateFirestore())
         .then(()=> navigation.navigate('tracker'))
-        .catch(err => console.log(err))
+        .then(res => setLoading(false))
+        .catch(err => console.log(err))+
 
         console.log('Hello World')
     }
 
     return (
-        <SafeAreaView style={{flex:1 , margin: 25}}>
+        <ScrollView style={{flex:1 , margin: 25}}>
             <View>
                 <View style={{justifyContent:'center' , alignItems:'center'}} >
                     <Text style={{fontWeight: 'bold' , fontSize:25}}>Track your parcel</Text>
@@ -85,15 +89,19 @@ function AddTracker() {
                     </Picker>
                 </View>
 
+                {
+                    loading ?  <ActivityIndicator size={'large'} animating={true} color={Colors.red800} />: 
                 <View style={styles.center} >
                     <TouchableOpacity onPress={()=> onAddTracker()} style={{ display: 'flex' , justifyContent:'center' , alignItems: 'center' , backgroundColor:'black' , borderRadius:15 , width: 250 , padding:15}}>
                         <Text style={{color:'white' , fontWeight:'bold'}}>Add A Trackers</Text>
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity  style={{marginTop:20}} onPress={() => testFirestore()} > 
+            }
+
+                {/* <TouchableOpacity  style={{marginTop:20}} onPress={() => testFirestore()} > 
                             <Text>Press here </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
 
               
@@ -102,7 +110,7 @@ function AddTracker() {
 
             </View>
 
-        </SafeAreaView>
+        </ScrollView>
     )
 }
 

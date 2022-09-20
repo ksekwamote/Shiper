@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Button , ImageBackground , Alert , ActivityIndicator } from 'react-native'
-import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
+import { Pressable,StyleSheet, Text, TextInput, TouchableOpacity, View  , ImageBackground , Alert , ActivityIndicator } from 'react-native'
+import {  Feather } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
@@ -20,12 +20,6 @@ const colors  ={
 const Header = () =>{
     return (
         <View style={{display:'flex', flexDirection: 'row'}}>
-        {/* <View style={{  display:'flex', justifyContent: 'center' , alignItems: 'center',paddingHorizontal:15, borderColor:colors.light, borderWidth:1 , borderRadius: 10 ,}}>
-            <View>
-                 <FontAwesome style={{padding:0}} name="angle-left" size={30} color="white" />
-            </View>
-           
-        </View> */}
         <View style={{display: 'flex' , justifyContent: 'center' , alignItems: 'center' }}>
             <Text style={{fontWeight: 'bold' , fontSize: 25 ,color: '#fff'}} >Log In</Text>
         </View>
@@ -136,6 +130,7 @@ const LogFields = ({setLoading}) =>{
 
   const [email, setEmail] = useState("")
   const [password , setPassword] = useState("")
+  const [show , setShow] = useState(true)
 
   const navigation = useNavigation()
 
@@ -156,11 +151,23 @@ const LogFields = ({setLoading}) =>{
             <View>
                 <Text style={styles.inputLabel}>Email</Text>
                 <TextInput onChangeText={setEmail} style={styles.textInput} placeholderTextColor={colors.lightgrey} placeholder='Enter your email address'></TextInput>
+           
             </View>
             <View>
                 <Text style={styles.inputLabel}>Password</Text>
-                <TextInput onChangeText={setPassword} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
+                <View style={styles.textInputPassword} >
+                     <TextInput style={{color:"#fff"}} secureTextEntry={show} onChangeText={setPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
+                     <TouchableOpacity style={{display:'flex', justifyContent:'center' , alignItems:'center'}} onPress={()=> setShow(!show) }>
+                            {
+                              show ? <Feather name="eye" size={20} color="white" />: 
+                              <Feather name="eye-off" size={20} color="white" />   
+                            }
+                             
+                     </TouchableOpacity>
+                   
+                </View>
             </View>
+
             <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' , marginTop:50}}>
                 <View>
                     <TouchableOpacity onPress={()=>login(email ,password)} style={styles.login}>
@@ -239,8 +246,6 @@ center: {
         borderColor:"#fff",
         borderRadius:15,
         borderWidth:5
-        
-
     } , 
     inputLabel:{
         color: 'white',
@@ -267,7 +272,10 @@ center: {
         color: colors.white,
         height: 50,
         marginBottom:20,
-        padding:10
+        padding:10,
+        display:'flex',
+        justifyContent:'space-between',
+        flexDirection:'row'
     },
     login:{ 
     display: 'flex' ,

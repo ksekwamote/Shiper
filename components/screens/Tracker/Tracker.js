@@ -1,11 +1,8 @@
 import React from 'react'
-import { View, Text ,SafeAreaView, TouchableHighlightBase } from 'react-native'
-import { Divider } from 'react-native-elements/dist/divider/Divider';
-// import Tracking from './Tracking';
+import { View, Text ,SafeAreaView } from 'react-native'
 // import Header from './Header.js';
 import Header from './Header';
 import Tracking from './Tracking';
-import { useNavigation } from '@react-navigation/native';
 
 
 

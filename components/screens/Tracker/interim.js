@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text  , StyleSheet, ScrollView, Image} from 'react-native'
-import { SimpleLineIcons ,MaterialCommunityIcons } from '@expo/vector-icons';
+import { SimpleLineIcons} from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector , useDispatch } from 'react-redux';

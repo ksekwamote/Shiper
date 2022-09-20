@@ -1,10 +1,11 @@
 import React , {useEffect , useState ,useRef } from 'react'
-import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity , Dimensions} from 'react-native'
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import defaultData from './defaultData';
+import { AntDesign } from '@expo/vector-icons';
 
 
 
@@ -15,6 +16,9 @@ Notifications.setNotificationHandler({
       shouldSetBadge: false,
     }),
 });
+
+const HEIGHT = Dimensions.get("screen").height
+const WIDTH  = Dimensions.get('screen').width
   
 export default function Success() {
 
@@ -51,21 +55,25 @@ export default function Success() {
     return (
         <SafeAreaView style={styles.container}>
 
-            <Image source={require("../../../assets/images/icons/success.png")}/>
-            <View style={{marginVertical:20}} >
-                <Text style={styles.text}>SUCESSS</Text>
-            </View>
-            <View style={{ marginVertical:20}}>
+            <Image
+            resizeMode="cover"
+            style={{
+                width: WIDTH*0.97,
+                height: HEIGHT*0.55,
+            }}
+             source={require("../../../assets/images/home/sale.png")}/>
+            <View style={{ marginVertical:10}}>
                 <Text style={{color:'#fff' , fontSize:20}}>Login Succesful </Text>
             </View>
+            <View style={{ padding:10}}>
+                <Text style={{color:'#fff' , fontSize:12}}>Enjoy the BEST PARCEL TRACKING SOLUTION in the world,
+                 trust us to give you the full path of your order and keep you up to date on its journey to your doorstep. </Text>
+            </View>
 
-            <TouchableOpacity onPress={()=> navigation.navigate('tracker') } style={{backgroundColor:'#fff' ,display:'flex' ,justifyContent:'center' ,alignItems:'center' , marginVertical:20, padding:10 , paddingHorizontal:100 , borderRadius:10}}>
-            <Text style={{fontWeight:'bold' , fontSize:25}}> OK</Text>
+            <TouchableOpacity onPress={()=> navigation.navigate('tracker') } style={{backgroundColor:'#fff' ,display:'flex' ,justifyContent:'space-between' ,alignItems:'center', flexDirection:'row' , marginVertical:20, padding:10 , paddingHorizontal:100 , borderRadius:10}}>
+            <Text style={{fontWeight:'bold' , fontSize:25 , marginRight:10}}> CONTINUE</Text>
+            <AntDesign style={{marginLeft:10}} name='arrowright' size={25} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=> sendPushNotification(expoPushToken)} style={{backgroundColor:'#fff' ,display:'flex' ,justifyContent:'center' ,marginTop:10 ,alignItems:'center' , marginVertical:20, padding:10 , paddingHorizontal:100 , borderRadius:10}}>
-            <Text style={{fontWeight:'bold' , fontSize:25}}>PRESS ME NOW</Text>
-            </TouchableOpacity>
-            
         </SafeAreaView>
     )
 }
@@ -107,7 +115,7 @@ async function sendPushNotification(expoPushToken) {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      const defaultCode = await defaultData(token)
+      const defaultCode = defaultData(token)
 
       firebase.firestore().collection("Trackers").doc(user.uid).update({
         ExpoToken: token

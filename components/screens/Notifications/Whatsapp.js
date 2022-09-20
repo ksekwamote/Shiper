@@ -1,18 +1,14 @@
-import { View, Text, SafeAreaView , Switch , StyleSheet, Image} from 'react-native';
-import Checkbox from 'expo-checkbox';
-import React  from 'react';
+import { View, Text, SafeAreaView , Switch , StyleSheet, Image , ActivityIndicator} from 'react-native';
+import React , {useEffect
+}  from 'react';
 import firebase from 'firebase';
 import { useDispatch , useSelector } from 'react-redux';
-import { changeNotificationSettings } from '../../redux/actions/actions'
 import { ScrollView } from 'react-native';
-import NumberVerify from './NumberVerify';
-import VerifyNumber from './VerifyNumber';
-import { AntDesign , MaterialIcons , MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import PhoneInput from 'react-native-phone-number-input';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Pressable } from 'react-native';
+
 
 
 function NotificationsHeader()
@@ -52,13 +48,14 @@ function Setting(props)
   const user  = firebase.auth().currentUser
   const [isSelected, setSelection] = React.useState(props.settingState);
   const dispatch = useDispatch()
+  const trackersRef = firebase.firestore().collection("Trackers").doc(user.uid)
+  
 
   function updateToFirebase(obj){
-          
-       dispatch(changeNotificationSettings(obj))
-      //  firebase.firestore().collection('Trackers').doc(user.uid).update({
-      //   Notifications: obj
-      // })
+    trackersRef.update({
+      "Menu.WhatsappNotification":obj
+    }).then(console.log)
+    .catch(console.log) 
   }
 
   function sortObject(obj){
@@ -77,28 +74,14 @@ function Setting(props)
   
   function setSetting(bool){
 
-   // console.log(bool)
-    if (props.settingName=="All") {
-        updateToFirebase({
-          All: bool,
-          pre_transit: bool,
-          in_transit:bool,
-          out_for_delivery:bool,
-          delivered:bool,
-          return_to_sender:bool,
-          failure:bool,
-      })
-    return
-    } 
-
     //NOT GOOD
-    if (props.settingName == "pre_transit"){ updateToFirebase(sortObject({...props.setting ,pre_transit:bool})); return}
-    if (props.settingName == "in_transit"){ updateToFirebase(sortObject({...props.setting ,in_transit:bool})); return}
-    if (props.settingName == "out_for_delivery"){ updateToFirebase(sortObject({...props.setting ,out_for_delivery:bool})); return}
-    if (props.settingName == "delivered"){ updateToFirebase(sortObject({...props.setting ,delivered:bool})); return}
-    if (props.settingName == "return_to_sender"){ updateToFirebase(sortObject({...props.setting ,return_to_sender:bool})); return}
-    if (props.settingName == "failure"){ updateToFirebase(sortObject({...props.setting ,failure:bool})); return}
-    
+    if (props.settingName == "pre_transit"){ updateToFirebase({...props.setting ,pre_transit:bool}); return}
+    if (props.settingName == "in_transit"){ updateToFirebase({...props.setting ,in_transit:bool}); return}
+    if (props.settingName == "out_for_delivery"){ updateToFirebase({...props.setting ,out_for_delivery:bool}); return}
+    if (props.settingName == "delivered"){ updateToFirebase({...props.setting ,delivered:bool}); return}
+    if (props.settingName == "return_to_sender"){updateToFirebase({...props.setting ,return_to_sender:bool}); return}
+    if (props.settingName == "failure"){ updateToFirebase({...props.setting ,failure:bool}); return}
+ 
 
   }
 
@@ -255,6 +238,18 @@ export default function Whatsapp() {
   const settings  = useSelector(state => state.notificationSetting)
   const [phoneNumber, setPhoneNumber] = React.useState();
   const [verify , setVerify] = React.useState(true)
+  const userr  = firebase.auth().currentUser
+  const [loading , setLoading] = React.useState(true)
+  const trackersRef = firebase.firestore().collection("Trackers").doc(userr.uid)
+  const [push , setPush ] = React.useState()
+
+
+  useEffect(()=>{
+   trackersRef.get()
+   .then(snapshot => setPush(snapshot.data().Menu.PushNotification))
+   .then(()=> setLoading(false))
+   .catch(console.log)
+  })
 
   function checkNumber(){
      const user  = firebase.auth().currentUser
@@ -281,7 +276,12 @@ export default function Whatsapp() {
 
   return (
    <SafeAreaView style={{flex:1}}>
-     {/* <Pressable onPress={()=> console.log(firebase.auth().currentUser)}><Text>Press me</Text></Pressable> */}
+  {  loading ? <View style={{ display: 'flex', justifyContent: "center", alignItems: "center", flex:1}}>
+          <ActivityIndicator color={"#000"} animating={loading} size={"large"} />
+          <Text style={{textAlign:'center' ,color:'#000' ,fontSize:18 ,marginTop:20}} >Loading...</Text>
+    </View>
+    :
+     <>
      { 
      verify ? 
      <VerifyOrContinue phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} setVerify= {setVerify} />
@@ -292,23 +292,50 @@ export default function Whatsapp() {
              <Text style={{fontWeight:'bold', fontSize:18, color:"#455A64"}} >{phoneNumber}</Text>
      </View>
    
-    <ScrollView style={{paddingBottom:20}} >
-
-    {
-       Object.keys(settings).map((key , index) =>
-       <Setting
-        setting={settings} 
-        key={index} 
-        settingName={key} 
-        settingState={settings[key]} 
+     <ScrollView style={{marginBottom:150 }} >
+       <>
+        <Setting
+        setting={push} 
+        settingName={"pre_transit"} 
+        settingState={push["pre_transit"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
         />
-        )
-     }
-    </ScrollView>
-
+        <Setting
+        setting={push} 
+        settingName={"in_transit"} 
+        settingState={push["in_transit"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
+        />
+        <Setting
+        setting={push} 
+        settingName={"out_for_delivery"} 
+        settingState={push["out_for_delivery"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
+        />
+        <Setting
+        setting={push} 
+        settingName={"delivered"} 
+        settingState={push["delivered"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
+        />
+        <Setting
+        setting={push} 
+        settingName={"return_to_sender"} 
+        settingState={push["return_to_sender"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
+        />
+        <Setting
+        setting={push} 
+        settingName={"failure"} 
+        settingState={push["failure"]} 
+        style={{ transform: [{ scaleX: 1.5}, { scaleY: 1.5}] }}
+        />
+       </>
+     </ScrollView>
      </View>
-}  
-    
+      }  
+    </>   
+    }
      
       
    </SafeAreaView>

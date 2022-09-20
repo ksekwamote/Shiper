@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View , Pressable , Image , KeyboardAvoidingView } from 'react-native'
-import { SimpleLineIcons ,FontAwesome } from '@expo/vector-icons';
+import {  StyleSheet, Text, TextInput, TouchableOpacity, View , Pressable , Image , KeyboardAvoidingView } from 'react-native'
+import { FontAwesome , Feather } from '@expo/vector-icons';
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
 import * as Google from 'expo-google-app-auth';
@@ -27,12 +27,12 @@ const colors  ={
 const Header = () =>{
     return (
         <View style={{display:'flex', flexDirection: 'row' , marginTop:10}}>
-        <View style={{  display:'flex', justifyContent: 'center' , alignItems: 'center',paddingHorizontal:15, borderColor:colors.light, borderWidth:1 , borderRadius: 10 ,}}>
+        {/* <View style={{  display:'flex', justifyContent: 'center' , alignItems: 'center',paddingHorizontal:15, borderColor:colors.light, borderWidth:1 , borderRadius: 10 ,}}>
             <View>
                  <FontAwesome style={{padding:0}} name="angle-left" size={30} color="white" />
             </View>
            
-        </View>
+        </View> */}
         <View style={{marginLeft:20, display: 'flex' , justifyContent: 'center' , alignItems: 'center' }}>
             <Text style={{fontWeight: 'bold' , fontSize: 25 ,color: '#fff'}} >Create Account</Text>
         </View>
@@ -66,6 +66,8 @@ const LogFields = () =>{
     const [password , setPassword] = useState("")
     const [confirmPass , setConfirmPass] = useState("")
     const navigation = useNavigation()
+    const [show , setShow] = useState(false)
+    const [show1 , setShow1] = useState(false)
 
     function login(user, pass){
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -164,11 +166,31 @@ function createUser(email , pass , confirmpass){
             </View>
             <View>
                 <Text style={styles.inputLabel}>Password</Text>
-                <TextInput onChangeText={setPassword} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
+                <View style={styles.textInputPassword} >
+                     <TextInput style={{color:"#fff"}} secureTextEntry={show} onChangeText={setPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
+                     <TouchableOpacity style={{display:'flex', justifyContent:'center' , alignItems:'center'}} onPress={()=> setShow(!show) }>
+                            {
+                              show ? <Feather name="eye" size={18} color="white" />: 
+                              <Feather name="eye-off" size={18} color="white" />   
+                            }
+                             
+                     </TouchableOpacity>
+                   
+                </View>
             </View>
             <View>
                 <Text style={styles.inputLabel}>Confirm Password</Text>
-                <TextInput onChangeText={setConfirmPass} style={styles.textInputPassword} placeholderTextColor={colors.lightgrey} placeholder='Confirm your password'></TextInput>
+                <View style={styles.textInputPassword} >
+                     <TextInput style={{color:"#fff"}} secureTextEntry={show1} onChangeText={setPassword} placeholderTextColor={colors.lightgrey} placeholder='Enter your password'></TextInput>
+                     <TouchableOpacity style={{display:'flex', justifyContent:'center' , alignItems:'center'}} onPress={()=> setShow1(!show1) }>
+                            {
+                              show1 ? <Feather name="eye" size={18} color="white" />: 
+                              <Feather name="eye-off" size={18} color="white" />   
+                            }
+                             
+                     </TouchableOpacity>
+                   
+                </View>
             </View>
             <View style={{display:'flex' , justifyContent: 'center' , alignItems: 'center' }}>
                 <View>
@@ -265,7 +287,10 @@ center: {
         color: colors.white,
         height: 50,
         marginBottom:20,
-        padding:10
+        padding:10,
+        display:'flex',
+        justifyContent:'space-between',
+        flexDirection:'row'
 
     }
 })

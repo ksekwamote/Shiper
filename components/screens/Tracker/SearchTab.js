@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { View, Text, TextInput  , StyleSheet , TouchableOpacity} from 'react-native'
+import { View, TextInput  , StyleSheet , TouchableOpacity} from 'react-native'
 import { useDispatch } from 'react-redux';
 import { changeTrackingID } from '../../redux/actions/actions';
 
@@ -32,7 +32,8 @@ export default function SearchTab() {
             </View>
         
         <TouchableOpacity onPress={() =>onSearch()} >
-               <AntDesign  name="scan1" size={20} color="black" />
+               {/* <AntDesign  name="scan1" size={20} color="black" /> */}
+               <AntDesign  name="plus" size={20} color="black" />
         </TouchableOpacity>
 
           

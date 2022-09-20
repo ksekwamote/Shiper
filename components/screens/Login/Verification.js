@@ -1,5 +1,4 @@
 import React from "react"
-import { Alert } from "react-native"
 import { View , Image , StyleSheet , Text , TouchableOpacity , SafeAreaView} from "react-native"
 import firebase from '../../config/fireConfig';
 import { useNavigation } from '@react-navigation/native';
@@ -13,7 +12,7 @@ export default function Verification() {
     const navigation = useNavigation()
 
 
-    function defaultData(){
+    function defaultData(){ 
         const user  = firebase.auth().currentUser
         const notifications = {
             delivered: true,

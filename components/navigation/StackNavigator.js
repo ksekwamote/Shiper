@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import {createStackNavigator } from '@react-navigation/stack'
 import * as screens from '../screens'
 import Verification from '../screens/Login/Verification'
@@ -10,7 +10,7 @@ export default function StackNavigator() {
     const Stack = createStackNavigator();
 
     return (
-        <Stack.Navigator initialRouteName="signin">
+        <Stack.Navigator initialRouteName="success">
             <Stack.Screen name='home' 
                 component={screens.Home}
                 options={{
@@ -47,13 +47,29 @@ export default function StackNavigator() {
                     header: () => null,
                 }}
             />
+            <Stack.Screen name='Menu' 
+                component={screens.Menu} 
+            />
+            <Stack.Screen name='Account' 
+                component={screens.Account} 
+            />
+            <Stack.Screen name='about' 
+                component={screens.AboutUs} 
+                options={{title:"About Us"}}
+            />
+            <Stack.Screen name='report' 
+                component={screens.Report} 
+                options={{title:"Report A Bug"}}
+            />
+            <Stack.Screen name='Settings' 
+                component={screens.Settings} 
+            />
             <Stack.Screen name="tracker"
              component={screens.Tracker}
              options={{
                 header: () => null,
             }}
               />
-
             <Stack.Screen name="Notifications"
              component={screens.Notifications}
               />

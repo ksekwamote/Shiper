@@ -1,8 +1,6 @@
-import React, {useState, useRef} from 'react';
-import { TouchableOpacity } from 'react-native'
-import { TextInput } from 'react-native'
-import { Image } from 'react-native'
-import {View, Text , StyleSheet , ScrollView , Pressable} from 'react-native'
+import React from 'react';
+
+import { StyleSheet , ScrollView } from 'react-native'
 // import PhoneInput from 'react-native-phone-number-input';
 // import firebase from '../../config/fireConfig';
 // import { getAuth, PhoneAuthProvider, signInWithCredential } from 'firebase/auth';

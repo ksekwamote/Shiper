@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text  , StyleSheet, ScrollView, Image , FlatList} from 'react-native'
-import { SimpleLineIcons ,MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text  , StyleSheet, ScrollView, Image , FlatList, Dimensions} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector , useDispatch } from 'react-redux';
@@ -26,6 +25,10 @@ function statusColor (status){
             return "lightgrey"
     }
 }
+
+
+const HEIGHT = Dimensions.get("screen").height
+const WIDTH  = Dimensions.get('screen').width
 
 
 const TrackingTabs  = (props) => {
@@ -143,7 +146,7 @@ export default function Tracking() {
     function handleClick(){
         firebase.firestore().collection("Trackers").doc(user.uid).update({
             ExpoToken: "575gv434N"
-        })
+        }).then(res => console.log(res)).catch(err => console.log(err))
     }
     
 
@@ -151,7 +154,7 @@ export default function Tracking() {
         firebase.firestore().collection('Trackers')
         .doc(user.uid).get()
             .then(snapshot => snapshot.data().Tracker.forEach(item => getTrackingData(item.trackingCode , item.carrier ,item.title )))
-        //console.log(user.uid)
+            .catch(err => console.log(err))
     }, []);
 
     return (
@@ -160,7 +163,10 @@ export default function Tracking() {
              <TrackingHeader
                 setSelect={setSelect}
              />
-                <FlatList 
+        
+            {
+                trackingInfo.length > 0 ?     
+                 <FlatList 
                     contentContainerStyle={{ paddingBottom: 30}}
                     data={trackingInfo.map(item => item)}
                     keyExtractor={item => item.key}
@@ -185,8 +191,12 @@ export default function Tracking() {
                         }
                     
                     }}
-                
-                />
+                /> :   
+                <View>
+                <Image style={{width: WIDTH*1.11 , height:HEIGHT*0.70 , alignSelf:'flex-start' , marginTop:-30}} source={require('../../../assets/images/home/online.png')} />
+             </View> 
+                }
+
         </View>
     )
 }
@@ -300,10 +310,10 @@ const styles = StyleSheet.create({
     borderColor:"#fff" ,
      marginRight:10,
      alignItems:'center', 
-     padding:10 ,
-     paddingHorizontal:15 ,
+     padding:10,
+     paddingHorizontal:10 ,
      backgroundColor:"#000" ,
-     borderRadius:25
+     borderRadius:10
     },
 
     UnselectedStatus: {
@@ -314,9 +324,9 @@ const styles = StyleSheet.create({
      marginRight:10,
      alignItems:'center', 
      padding:10 ,
-     paddingHorizontal:15 ,
+     paddingHorizontal:10 ,
      backgroundColor:"#fff" ,
-     borderRadius:25} ,
+     borderRadius:10} ,
      selectedText:{color:"#fff" , marginBottom:3},
      unselectedText:{color:"#000" , marginBottom:3},
 
